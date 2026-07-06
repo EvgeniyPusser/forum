@@ -22,11 +22,11 @@ function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export async function createPost(author, body = {}) {
+export async function createPost(body = {}) {
   return postRepository.create({
     title: body.title || "",
     content: body.content || "",
-    author,
+    author: body.author || "",
     tags: normalizeTags(body.tags),
     likes: 0,
     comments: [],

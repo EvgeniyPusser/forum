@@ -1,7 +1,7 @@
 import * as postService from "../services/post.service.js";
 
 export async function createPost(request, response) {
-  const post = await postService.createPost(request.params.user, request.body);
+  const post = await postService.createPost(request.body);
 
   response.status(201).json(post);
 }

@@ -4,7 +4,7 @@ import * as postController from "../controllers/post.controller.js";
 
 const router = express.Router();
 
-router.post("/post/:user", postController.createPost);
+router.post("/post", postController.createPost);
 router.get("/post/:postId", postController.getPostById);
 router.patch("/post/:postId", postController.updatePost);
 router.delete("/post/:postId", postController.deletePost);
