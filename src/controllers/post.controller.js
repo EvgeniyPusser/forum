@@ -80,13 +80,6 @@ export async function getPostsByTags(request, response) {
 export async function getPostsByPeriod(request, response) {
   const { dateFrom, dateTo } = request.query;
 
-  if (!dateFrom || !dateTo) {
-    response.status(400).json({
-      message: "Query parameters 'dateFrom' and 'dateTo' are required.",
-    });
-    return;
-  }
-
   const posts = await postService.getPostsByPeriod(dateFrom, dateTo);
   response.status(200).json(posts);
 }

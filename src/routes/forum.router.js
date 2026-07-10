@@ -1,17 +1,27 @@
 import express from "express";
 
 import * as postController from "../controllers/post.controller.js";
+import validate, { validatePostId } from "../middlewares/validation.middleware.js";
 
 const router = express.Router();
 
-router.post("/post", postController.createPost);
-router.get("/post/:postId", postController.getPostById);
-router.patch("/post/:postId", postController.updatePost);
-router.delete("/post/:postId", postController.deletePost);
-router.patch("/post/:postId/like", postController.addLike);
-router.patch("/post/:postId/comment/:commenter", postController.addComment);
+router.post("/post", validate("createPost"), postController.createPost);
+router.get("/post/:postId", validatePostId, postController.getPostById);
+router.patch("/post/:postId", validatePostId, validate("updatePost"), postController.updatePost);
+router.delete("/post/:postId", validatePostId, postController.deletePost);
+router.patch("/post/:postId/like", validatePostId, postController.addLike);
+router.patch(
+  "/post/:postId/comment/:commenter",
+  validatePostId,
+  validate("addComment"),
+  postController.addComment,
+);
 router.get("/posts/author/:user", postController.getPostsByAuthor);
-router.get("/posts/tags", postController.getPostsByTags);
-router.get("/posts/period", postController.getPostsByPeriod);
+router.get("/posts/tags", validate("tagsQuery", "query"), postController.getPostsByTags);
+router.get(
+  "/posts/period",
+  validate("dateFormatPeriod", "query"),
+  postController.getPostsByPeriod,
+);
 
 export default router;

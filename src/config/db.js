@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { ensureDefaultAdmin } from "../services/account.service.js";
+
 export async function connectToDatabase() {
   const { MONGO_URI, DB_NAME } = process.env;
 
@@ -10,4 +12,6 @@ export async function connectToDatabase() {
   await mongoose.connect(MONGO_URI, {
     dbName: DB_NAME || undefined,
   });
+
+  await ensureDefaultAdmin();
 }
