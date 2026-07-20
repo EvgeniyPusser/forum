@@ -1,7 +1,7 @@
 import * as postService from "../services/post.service.js";
 
 export async function createPost(request, response) {
-  const post = await postService.createPost(request.body);
+  const post = await postService.createPost(request.params.author, request.body);
 
   response.status(201).json(post);
 }
@@ -17,8 +17,17 @@ export async function getPostById(request, response) {
   response.status(200).json(post);
 }
 
+export async function getPosts(_request, response) {
+  const posts = await postService.getPosts();
+  response.status(200).json(posts);
+}
+
 export async function updatePost(request, response) {
-  const post = await postService.updatePost(request.params.postId, request.body);
+  const post = await postService.updatePost(
+    request.params.postId,
+    request.authUser,
+    request.body,
+  );
 
   if (!post) {
     response.sendStatus(404);
@@ -29,7 +38,7 @@ export async function updatePost(request, response) {
 }
 
 export async function deletePost(request, response) {
-  const post = await postService.deletePost(request.params.postId);
+  const post = await postService.deletePost(request.params.postId, request.authUser);
 
   if (!post) {
     response.status(404).json({

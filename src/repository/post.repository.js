@@ -18,6 +18,11 @@ export async function findById(postId) {
   return mapDocument(post);
 }
 
+export async function findAll() {
+  const posts = await PostModel.find();
+  return posts.map(mapDocument);
+}
+
 export async function updateById(postId, update, options = {}) {
   const post = await PostModel.findByIdAndUpdate(postId, update, {
     new: true,

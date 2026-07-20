@@ -22,11 +22,41 @@ function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export async function createPost(body = {}) {
+function createHttpError(status, message) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
+function hasRole(user, role) {
+  return user?.roles?.includes(role);
+}
+
+function canModifyPost(user, post) {
+  return (
+    post?.author === user?.login ||
+    hasRole(user, "ADMIN") ||
+    hasRole(user, "MODERATOR")
+  );
+}
+
+async function assertCanModifyPost(postId, authUser) {
+  const post = await postRepository.findById(postId);
+
+  if (!post) {
+    throw createHttpError(404, `Post with id = ${postId} not found`);
+  }
+
+  if (!canModifyPost(authUser, post)) {
+    throw createHttpError(403, "Post owner, moderator or admin role is required.");
+  }
+}
+
+export async function createPost(author, body = {}) {
   return postRepository.create({
     title: body.title || "",
     content: body.content || "",
-    author: body.author || "",
+    author,
     tags: normalizeTags(body.tags),
     likes: 0,
     comments: [],
@@ -37,7 +67,13 @@ export async function getPostById(postId) {
   return postRepository.findById(postId);
 }
 
-export async function updatePost(postId, body = {}) {
+export async function getPosts() {
+  return postRepository.findAll();
+}
+
+export async function updatePost(postId, authUser, body = {}) {
+  await assertCanModifyPost(postId, authUser);
+
   const update = {};
 
   if (body.title !== undefined) {
@@ -59,7 +95,9 @@ export async function updatePost(postId, body = {}) {
   return postRepository.updateById(postId, update);
 }
 
-export async function deletePost(postId) {
+export async function deletePost(postId, authUser) {
+  await assertCanModifyPost(postId, authUser);
+
   return postRepository.deleteById(postId);
 }
 

@@ -7,6 +7,10 @@ function createHttpError(status, message) {
   return error;
 }
 
+function hasRole(user, role) {
+  return user?.roles?.includes(role);
+}
+
 export async function authenticate(request, response, next) {
   const credentials = readBasicCredentials(request.headers.authorization);
 
@@ -30,7 +34,7 @@ export async function authenticate(request, response, next) {
 }
 
 export function requireAdmin(request, _response, next) {
-  if (request.authUser?.roles?.includes("ADMIN")) {
+  if (hasRole(request.authUser, "ADMIN")) {
     next();
     return;
   }
@@ -38,11 +42,33 @@ export function requireAdmin(request, _response, next) {
   next(createHttpError(403, "Admin role is required."));
 }
 
+export function requireModeratorOrAdmin(request, _response, next) {
+  if (hasRole(request.authUser, "ADMIN") || hasRole(request.authUser, "MODERATOR")) {
+    next();
+    return;
+  }
+
+  next(createHttpError(403, "Moderator or admin role is required."));
+}
+
+export function requireSelf(paramName = "user") {
+  return (request, _response, next) => {
+    const targetLogin = request.params[paramName];
+
+    if (request.authUser?.login === targetLogin) {
+      next();
+      return;
+    }
+
+    next(createHttpError(403, "Access denied."));
+  };
+}
+
 export function requireSelfOrAdmin(paramName = "user") {
   return (request, _response, next) => {
     const targetLogin = request.params[paramName];
 
-    if (request.authUser?.roles?.includes("ADMIN") || request.authUser?.login === targetLogin) {
+    if (hasRole(request.authUser, "ADMIN") || request.authUser?.login === targetLogin) {
       next();
       return;
     }

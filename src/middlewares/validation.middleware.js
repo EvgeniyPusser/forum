@@ -17,6 +17,9 @@ const schemas = {
   userParam: Joi.object({
     user: Joi.string().trim().required(),
   }).unknown(true),
+  authorParam: Joi.object({
+    author: Joi.string().trim().required(),
+  }).unknown(true),
   userRoleParams: Joi.object({
     user: Joi.string().trim().required(),
     role: Joi.string().trim().required(),
@@ -24,7 +27,6 @@ const schemas = {
   createPost: Joi.object({
     title: Joi.string().trim().required(),
     content: Joi.string().trim().required(),
-    author: Joi.string().trim().required(),
     tags: Joi.array().items(Joi.string().trim()).default([]),
   }),
   addComment: Joi.object({
