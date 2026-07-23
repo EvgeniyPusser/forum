@@ -1,0 +1,10 @@
+npm warn Unknown env config "min-release-age". This will stop working in the next major version of npm.
+(node:26568) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Error: Access denied.
+    at createHttpError (file:///C:/Users/evgen/Codes/forum/src/middlewares/auth.middleware.js:5:17)
+    at file:///C:/Users/evgen/Codes/forum/src/middlewares/auth.middleware.js:63:10
+    at Layer.handleRequest (C:\Users\evgen\Codes\forum\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\evgen\Codes\forum\node_modules\router\lib\route.js:157:13)
+    at authenticate (file:///C:/Users/evgen/Codes/forum/src/middlewares/auth.middleware.js:25:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)

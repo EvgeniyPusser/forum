@@ -20,6 +20,9 @@ const schemas = {
   authorParam: Joi.object({
     author: Joi.string().trim().required(),
   }).unknown(true),
+  commenterParam: Joi.object({
+    commenter: Joi.string().trim().required(),
+  }).unknown(true),
   userRoleParams: Joi.object({
     user: Joi.string().trim().required(),
     role: Joi.string().trim().required(),

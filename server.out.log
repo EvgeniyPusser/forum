@@ -1,0 +1,5 @@
+
+> forum@1.0.0 start
+> node src/server.js
+
+Server is running on http://localhost:8080

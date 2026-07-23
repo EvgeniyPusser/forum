@@ -28,16 +28,8 @@ function createHttpError(status, message) {
   return error;
 }
 
-function hasRole(user, role) {
-  return user?.roles?.includes(role);
-}
-
 function canModifyPost(user, post) {
-  return (
-    post?.author === user?.login ||
-    hasRole(user, "ADMIN") ||
-    hasRole(user, "MODERATOR")
-  );
+  return post?.author === user?.login;
 }
 
 async function assertCanModifyPost(postId, authUser) {
@@ -48,7 +40,7 @@ async function assertCanModifyPost(postId, authUser) {
   }
 
   if (!canModifyPost(authUser, post)) {
-    throw createHttpError(403, "Post owner, moderator or admin role is required.");
+    throw createHttpError(403, "Only the post author can modify this post.");
   }
 }
 

@@ -31,7 +31,10 @@ router.delete(
 router.patch("/post/:postId/like", validatePostId, postController.addLike);
 router.patch(
   "/post/:postId/comment/:commenter",
+  authenticate,
+  requireSelf("commenter"),
   validatePostId,
+  validate("commenterParam", "params"),
   validate("addComment"),
   postController.addComment,
 );
